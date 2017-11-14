@@ -71,7 +71,7 @@ class HBNBCommand(cmd.Cmd):
                     continue
                 sargs = sargs.groupdict()
                 if sargs['string']:
-                    kwargs[sargs['key']] = sargs['string']
+                    kwargs[sargs['key']] = sargs['string'].replace('_', ' ')
                 elif sargs['float'] and sargs['float'] != '.':
                     kwargs[sargs['key']] = float(sargs['float'])
                 else:
