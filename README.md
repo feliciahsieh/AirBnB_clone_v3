@@ -1,6 +1,6 @@
 # AirBnB Clone V.2 - MYSQL
 
-#### Synopsis
+## Synopsis
 This is the 2nd version of our AirBnB clone project. We will be using a MySQL database with the following environmental variables:
 
 <ul>
