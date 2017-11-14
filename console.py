@@ -12,6 +12,7 @@ from models.review import Review
 from models.state import State
 from models.user import User
 import shlex  # for splitting the line along spaces except in double quotes
+import re
 
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -34,18 +35,55 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_create(self, arg):
-        """Creates a new instance of a class"""
-        args = shlex.split(arg)
+        """Creates a new instance of a class
+
+        Command syntax: create <Class name> <param 1> <param 2> <param 3>...
+
+        Param syntax: <key name>=<value>
+
+        Value syntax:
+            string: "<value>"
+                Internal double quotes should be escaped. Spaces can be
+                represented using `_` and will be replaced by spaces.
+            float: <unit>.<decimal>
+                Unit or decimal may be missing.
+            int: <number>
+                Decimal integer.
+
+        Any parameter that does not fit this pattern will be ignored.
+        """
+        args = shlex.split(arg, posix=False)
         if len(args) == 0:
             print("** class name missing **")
             return False
-        if args[0] in classes:
-            instance = classes[args[0]]()
-        else:
+        if args[0] not in classes:
             print("** class doesn't exist **")
             return False
-        print(instance.id)
-        instance.save()
+        else:
+            kwargs = {}
+            for arg in args[1:]:
+                sargs = re.search('^(?P<key>\w+)=(?:\"'
+                                  '(?P<string>.*?)\"|'
+                                  '(?P<float>\d*\.\d*)|'
+                                  '(?P<int>\d+))$',
+                                  arg)
+                if not sargs:
+                    continue
+                sargs = sargs.groupdict()
+                if sargs['string']:
+                    kwargs[sargs['key']] = sargs['string']
+                elif sargs['float'] and sargs['float'] != '.':
+                    kwargs[sargs['key']] = float(sargs['float'])
+                else:
+                    kwargs[sargs['key']] = int(sargs['int'])
+            instance = classes[args[0]](**kwargs)
+            try:
+                instance.save()
+            except:
+                print("** could not save [{}] object **".format(args[0]))
+                return False
+            else:
+                print(instance.id)
 
     def do_show(self, arg):
         """Prints an instance as a string based on the class and id"""

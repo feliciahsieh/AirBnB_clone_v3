@@ -1,0 +1,8 @@
+# Files we don't need:
+*~
+\#*\#
+__pycache__/
+*main*.py
+*.pyo
+*.pyc
+file.json
