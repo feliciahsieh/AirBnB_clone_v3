@@ -1,4 +1,4 @@
-# AirBnB Clone V.2 - MYSQL
+# <img src="https://www.holbertonschool.com/assets/holberton-logo-simplified-71b02868461c07d54553e4a7cc05d1926681a6755cc19030b0458f2d70ae9909.png" width="30"> AirBnB Clone V.2 - MYSQL
 
 ## Synopsis
 This is the 2nd version of our AirBnB clone project. We will be using a MySQL database with the following environmental variables:
