@@ -20,6 +20,8 @@ class User(BaseModel, Base):
                            nullable=True)
         places = relationship("Place",
                               backref="user")
+        reviews = relationship("Review",
+                               backref="user")
     else:
         email = ""
         password = ""

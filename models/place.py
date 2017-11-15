@@ -35,7 +35,8 @@ class Place(BaseModel, Base):
                          nullable=False)
         longitude = Float(Float,
                          nullable=False)
-        amenity_ids = []
+        reviews = relationship("Review",
+                               backref="place")
     else:
         city_id = ""
         user_id = ""
@@ -52,3 +53,13 @@ class Place(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes Place"""
         super().__init__(*args, **kwargs)
+
+    @property
+    def reviews(self):
+        """attribute that returns list of Review instances"""
+        values_review = models.storage.all("Review").values()
+        list_review = []
+        for review in values_review:
+            if review.place_id == self.id:
+                list_review.append(review)
+        return list_review
