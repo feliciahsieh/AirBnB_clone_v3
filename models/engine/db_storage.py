@@ -19,9 +19,11 @@ class DBStorage:
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
                                       .format(user, passwd, host, database))
         if os.getenv('HBNB_ENV') == 'test':
-            Base.metadata.drop_all()
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        if not self.__session:
+            self.reload()
         objects = {}
         if cls:
             for obj in self.__session.query(cls):
@@ -33,6 +35,19 @@ class DBStorage:
         return objects
 
     def reload(self):
-        self.__session = Session()
-        if os.getenv('HBNB_ENV') == 'test':
-            for obj in session.
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
+        self.__session = scoped_session(session_factory)
+        Base.metadata.create_all(self.__engine)
+
+    def new(self, obj):
+        self.__session.add(obj)
+
+    def save(self):
+        self.__session.commit()
+
+    def delete(self, obj=None):
+        if not self.__session:
+            self.reload()
+        if obj:
+            self.__session.delete(obj)
