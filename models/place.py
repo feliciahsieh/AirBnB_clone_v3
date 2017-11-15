@@ -81,7 +81,8 @@ class Place(BaseModel, Base):
             if review.place_id == self.id:
                 list_review.append(review)
         return list_review
-    if getenv('HBNB_TYPE_STORAGE') == 'db':
+
+    if getenv('HBNB_TYPE_STORAGE') != 'db':
         @property
         def amenities(self):
             """attribute that returns list of Amenity instances"""
