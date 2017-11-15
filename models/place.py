@@ -2,14 +2,14 @@
 """ holds class Place"""
 import models
 from models.base_model import BaseModel, Base
-import os
+from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String
-from sqlalchemy import relationship
+from sqlalchemy.orm import relationship
 
 class Place(BaseModel, Base):
     """Representation of Place """
-    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
         __tablename__ = places
         city_id = Column(String(60),
                          nullable=False)
@@ -37,6 +37,10 @@ class Place(BaseModel, Base):
                          nullable=False)
         reviews = relationship("Review",
                                backref="place")
+        amenities = relationship("Amenity",
+                                 secondary="place_amenity",
+                                 viewonly=False,
+                                 backref="place_amenities")
     else:
         city_id = ""
         user_id = ""

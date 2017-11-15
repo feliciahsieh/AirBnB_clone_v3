@@ -2,13 +2,13 @@
 """ holds class User"""
 import models
 from models.base_model import BaseModel, Base
-import os
+from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String
 
 class User(BaseModel, Base):
     """Representation of a user """
-    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
         __tablename__ = 'users'
         email = Column(String(128),
                        nullable=False)
