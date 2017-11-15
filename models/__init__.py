@@ -4,19 +4,20 @@ initialize the models package
 """
 
 import os
-from base_model import Base, BaseModel
-from amenity import Amenity
-from city import City
-from place import Place
-from review import Review
-from state import State
-from user import User
-
-"""DBSTORAGE"""
+'''
+import base_model
+import amenity
+import city
+import place
+import review
+import state
+import user
+'''
+# DBSTORAGE
 if os.getenv('HBNB_TYPE_STORAGE') == 'db':
     from models.engine.db_storage import DBStorage
     storage = DBStorage()
-"""FILESTORAGE"""
+# FILESTORAGE
 else:
     from models.engine.file_storage import FileStorage
     storage = FileStorage()
