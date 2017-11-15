@@ -19,7 +19,8 @@ class City(BaseModel, Base):
                           ForeignKey('states.id'),
                           nullable=False)
         places = relationship("Place",
-                              backref="cities")
+                              backref="cities",
+                              cascade="all, delete-orphan")
     else:
         name = ""
         state_id = ""
