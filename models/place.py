@@ -81,13 +81,13 @@ class Place(BaseModel, Base):
             if review.place_id == self.id:
                 list_review.append(review)
         return list_review
-
-    @property
-    def amenities(self):
-        """attribute that returns list of Amenity instances"""
-        values_amenity = models.storage.all("Amenity").values()
-        list_amenity = []
-        for amenity in values_amenity:
-            if amenity.place_id == self.id:
-                list_amenity.append(amenity)
-        return list_amenity
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        @property
+        def amenities(self):
+            """attribute that returns list of Amenity instances"""
+            values_amenity = models.storage.all("Amenity").values()
+            list_amenity = []
+            for amenity in values_amenity:
+                if amenity.place_id == self.id:
+                    list_amenity.append(amenity)
+            return list_amenity
