@@ -4,7 +4,7 @@ from models.base_model import BaseModel, Base
 import os
 from sqlalchemy import ForeignKey
 
-class City(BaseModel):
+class City(BaseModel, Base):
     """Representation of city """
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         __tablename__ = 'cities'
