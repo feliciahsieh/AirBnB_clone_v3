@@ -18,6 +18,8 @@ class User(BaseModel, Base):
                             nullable=True)
         last_name = Column(String(128),
                            nullable=True)
+        places = relationship("Place",
+                              backref="user")
     else:
         email = ""
         password = ""
