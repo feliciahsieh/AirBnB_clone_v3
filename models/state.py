@@ -1,7 +1,11 @@
 #!/usr/bin/python
 """ holds class State"""
-from models.base_model import BaseModel
-
+import models
+from models.base_model import BaseModel, Base
+import os
+import sqlalchemy
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 
 class State(BaseModel, Base):
     """Representation of state """
