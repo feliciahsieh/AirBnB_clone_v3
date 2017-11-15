@@ -53,7 +53,7 @@ class Place(BaseModel, Base):
         amenities = relationship("Amenity",
                                  secondary=place_amenity,
                                  viewonly=False,
-                                 backref="places")
+                                 backref="place_amenities")
     else:
         city_id = ""
         user_id = ""
