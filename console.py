@@ -63,7 +63,7 @@ class HBNBCommand(cmd.Cmd):
             kwargs = {}
             for arg in args[1:]:
                 sargs = re.search('^(?P<key>\w+)=(?:\"'
-                                  '(?P<string>.*?)\"|'
+                                  '(?P<string>.*)\"|'
                                   '(?P<float>\d*\.\d*)|'
                                   '(?P<int>\d+))$',
                                   arg)

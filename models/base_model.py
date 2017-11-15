@@ -5,6 +5,7 @@ Contains class BaseModel
 
 from datetime import datetime
 import models
+from sqlalchemy import Column, String, DateTime
 import uuid
 
 time_fmt = "%Y-%m-%dT%H:%M:%S.%f"
@@ -12,6 +13,10 @@ time_fmt = "%Y-%m-%dT%H:%M:%S.%f"
 
 class BaseModel:
     """The BaseModel class from which future classes will be derived"""
+
+    id = Column(String(60), nullable=False, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
@@ -26,9 +31,6 @@ class BaseModel:
                 self.created_at = datetime.strptime(self.created_at, time_fmt)
             if type(self.updated_at) is str:
                 self.updated_at = datetime.strptime(self.updated_at, time_fmt)
-        if 'id' not in kwargs:
-            models.storage.new(self)
-        models.storage.save()
 
     def __str__(self):
         """String representation of the BaseModel class"""
@@ -38,7 +40,9 @@ class BaseModel:
     def save(self):
         """updates the attribute 'updated_at' with the current datetime"""
         self.updated_at = datetime.now()
+        models.storage.new(self)
         models.storage.save()
+
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of the instance"""
@@ -48,4 +52,9 @@ class BaseModel:
         if "updated_at" in new_dict:
             new_dict["updated_at"] = new_dict["updated_at"].isoformat()
         new_dict["__class__"] = self.__class__.__name__
+        new_dict.pop('_sa_instance_state', None)
         return new_dict
+
+    def delete(self):
+        """Delete current instance from storage by calling its delete method"""
+        models.storage.delete(self)
