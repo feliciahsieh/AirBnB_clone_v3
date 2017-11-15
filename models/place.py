@@ -14,7 +14,7 @@ if getenv('HBNB_TYPE_STORAGE') == 'db':
                                      ForeignKey('places.id'),
                                      primary_key=True,
                                      nullable=False),
-                              Column('amenity_id'.
+                              Column('amenity_id',
                                      String(60),
                                      ForeignKey('amenities.id'),
                                      primary_key=True,
@@ -25,7 +25,9 @@ class Place(BaseModel, Base):
     if getenv('HBNB_TYPE_STORAGE') == 'db':
         __tablename__ = 'places'
         city_id = Column(String(60),
+                         ForeignKey("cities.id"),
                          nullable=False)
+
         user_id = Column(String(60),
                          ForeignKey('users.id'),
                          nullable=False)
@@ -50,11 +52,11 @@ class Place(BaseModel, Base):
         longitude = Float(Float,
                          nullable=False)
         reviews = relationship("Review",
-                               backref="place")
+                               backref="places")
         amenities = relationship("Amenity",
-                                 secondary="place_amenity",
+                                 secondary=place_amenity,
                                  viewonly=False,
-                                 backref="amenities")
+                                 backref="places")
     else:
         city_id = ""
         user_id = ""

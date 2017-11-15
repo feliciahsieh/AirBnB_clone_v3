@@ -5,6 +5,12 @@ connection.
 
 import os
 from models.base_model import Base
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.state import State
+from models.review import Review
+from models.user import User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
@@ -31,9 +37,19 @@ class DBStorage:
             for obj in self.__session.query(cls):
                 objects[obj.__class__.__name__ + '.' + obj.id] = obj
         else:
-            for table in engine.table_names():
-                for obj in self.__session.query(table):
-                    objects[obj.__class__.__name__ + '.' + obj.id] = obj
+            for obj in self.__session.query(Amenity):
+                objects[obj.__class__.__name__ + '.' + obj.id] = obj
+            for obj in self.__session.query(City):
+                objects[obj.__class__.__name__ + '.' + obj.id] = obj
+            for obj in self.__session.query(Place):
+                objects[obj.__class__.__name__ + '.' + obj.id] = obj
+            for obj in self.__session.query(State):
+                objects[obj.__class__.__name__ + '.' + obj.id] = obj
+            for obj in self.__session.query(Review):
+                objects[obj.__class__.__name__ + '.' + obj.id] = obj
+            for obj in self.__session.query(User):
+                objects[obj.__class__.__name__ + '.' + obj.id] = obj
+
         return objects
 
     def reload(self):

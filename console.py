@@ -79,8 +79,9 @@ class HBNBCommand(cmd.Cmd):
             instance = classes[args[0]](**kwargs)
             try:
                 instance.save()
-            except:
+            except Exception as e:
                 print("** could not save [{}] object **".format(args[0]))
+                print(e)
                 return False
             else:
                 print(instance.id)
