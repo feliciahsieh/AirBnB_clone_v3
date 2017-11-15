@@ -8,6 +8,7 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKey
 
+
 class Review(BaseModel, Base):
     """Representation of Review """
     if getenv('HBNB_TYPE_STORAGE') == 'db':

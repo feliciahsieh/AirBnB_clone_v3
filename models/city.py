@@ -8,6 +8,7 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKey
 
+
 class City(BaseModel, Base):
     """Representation of city """
     if getenv('HBNB_TYPE_STORAGE') == 'db':

@@ -51,7 +51,6 @@ class BaseModel:
         models.storage.new(self)
         models.storage.save()
 
-
     def to_dict(self):
         """returns a dictionary containing all keys/values of the instance"""
         new_dict = self.__dict__.copy()
