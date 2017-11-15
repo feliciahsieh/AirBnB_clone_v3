@@ -3,8 +3,10 @@
 connection.
 """
 
-from models import Base
+import os
+from models.base_model import Base
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 
 class DBStorage:

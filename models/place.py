@@ -4,16 +4,17 @@ import models
 from models.base_model import BaseModel, Base
 from os import getenv
 import sqlalchemy
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 
 class Place(BaseModel, Base):
     """Representation of Place """
     if getenv('HBNB_TYPE_STORAGE') == 'db':
-        __tablename__ = places
+        __tablename__ = 'places'
         city_id = Column(String(60),
                          nullable=False)
         user_id = Column(String(60),
+                         ForeignKey('users.id'),
                          nullable=False)
         name = Column(String(128),
                       nullable=False)

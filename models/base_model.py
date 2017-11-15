@@ -6,9 +6,11 @@ Contains class BaseModel
 from datetime import datetime
 import models
 from sqlalchemy import Column, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
 import uuid
 
 time_fmt = "%Y-%m-%dT%H:%M:%S.%f"
+Base = declarative_base()
 
 
 class BaseModel:
