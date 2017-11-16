@@ -9,7 +9,6 @@ import inspect
 import io
 import pep8
 import unittest
-from unittest import mock
 HBNBCommand = console.HBNBCommand
 
 
@@ -59,8 +58,7 @@ class TestConsoleCommands(unittest.TestCase):
         """Close in memory buffer after test completes"""
         self.output.close()
 
-    @mock.patch('models.storage')
-    def test_do_create(self, mock_storage):
+    def test_do_create(self):
         """Test do_create method of console"""
         with redirect_stdout(self.output):
             self.cmdcon.onecmd('create')
@@ -89,5 +87,3 @@ class TestConsoleCommands(unittest.TestCase):
                              '[a-z0-9]{4}-'
                              '[a-z0-9]{4}-'
                              '[a-z0-9]{12}')
-            self.assertTrue(mock_storage.new.called)
-            self.assertTrue(mock_storage.save.called)
