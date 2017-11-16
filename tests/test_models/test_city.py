@@ -7,8 +7,10 @@ from datetime import datetime
 import inspect
 from models import city
 from models.base_model import BaseModel
+import os
 import pep8
 import unittest
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 City = city.City
 
 
@@ -66,17 +68,37 @@ class TestCity(unittest.TestCase):
         self.assertTrue(hasattr(city, "created_at"))
         self.assertTrue(hasattr(city, "updated_at"))
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_name_attr(self):
         """Test that City has attribute name, and it's an empty string"""
         city = City()
         self.assertTrue(hasattr(city, "name"))
         self.assertEqual(city.name, "")
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
+                     "Testing FileStorage")
+    def test_name_attr_db(self):
+        """Test for DBStorage name attribute"""
+        city = City()
+        self.assertTrue(hasattr(City, "name"))
+        self.assertIsInstance(City.name, InstrumentedAttribute)
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_state_id_attr(self):
         """Test that City has attribute state_id, and it's an empty string"""
         city = City()
         self.assertTrue(hasattr(city, "state_id"))
         self.assertEqual(city.state_id, "")
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
+                     "Testing FileStorage")
+    def test_state_id_attr_db(self):
+        """Test for DBStorage state_id attribute"""
+        city = City()
+        self.assertTrue(hasattr(City, "state_id"))
+        self.assertIsInstance(City.state_id, InstrumentedAttribute)
 
     def test_to_dict_creates_dict(self):
         """test to_dict method creates a dictionary with proper attrs"""
@@ -84,7 +106,11 @@ class TestCity(unittest.TestCase):
         new_d = c.to_dict()
         self.assertEqual(type(new_d), dict)
         for attr in c.__dict__:
-            self.assertTrue(attr in new_d)
+            with self.subTest(attr=attr):
+                if attr == '_sa_instance_state':
+                    continue
+                self.assertTrue(attr in new_d)
+        if os.getenv('HBNB_TYPE_STORAGE') != 'db':
             self.assertTrue("__class__" in new_d)
 
     def test_to_dict_values(self):

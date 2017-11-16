@@ -7,8 +7,11 @@ from datetime import datetime
 import inspect
 from models import place
 from models.base_model import BaseModel
+import os
 import pep8
 import unittest
+from sqlalchemy.orm.collections import InstrumentedList
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 Place = place.Place
 
 
@@ -132,12 +135,22 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(type(place.longitude), float)
         self.assertEqual(place.longitude, 0.0)
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing FileStorage")
     def test_amenity_ids_attr(self):
         """Test Place has attr amenity_ids, and it's an empty list"""
         place = Place()
         self.assertTrue(hasattr(place, "amenity_ids"))
         self.assertEqual(type(place.amenity_ids), list)
         self.assertEqual(len(place.amenity_ids), 0)
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
+                     "Testing FileStorage")
+    def test_amenities_attr_db(self):
+        """Test Place has attr amenity_ids, and it's an empty list"""
+        place = Place()
+        self.assertTrue(hasattr(Place, "amenities"))
+        self.assertEqual(type(place.amenities), InstrumentedList)
 
     def test_to_dict_creates_dict(self):
         """test to_dict method creates a dictionary with proper attrs"""
