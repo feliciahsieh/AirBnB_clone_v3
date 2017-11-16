@@ -52,39 +52,41 @@ class HBNBCommand(cmd.Cmd):
 
         Any parameter that does not fit this pattern will be ignored.
         """
-        args = shlex.split(arg, posix=False)
+        args = arg.split(maxsplit=1)
         if len(args) == 0:
             print("** class name missing **")
             return False
         if args[0] not in classes:
             print("** class doesn't exist **")
             return False
-        else:
-            kwargs = {}
-            for arg in args[1:]:
-                sargs = re.search('^(?P<key>\w+)=(?:\"'
-                                  '(?P<string>.*)\"|'
-                                  '(?P<float>\d*\.\d*)|'
-                                  '(?P<int>\d+))$',
-                                  arg)
-                if not sargs:
-                    continue
-                sargs = sargs.groupdict()
-                if sargs['string']:
-                    kwargs[sargs['key']] = sargs['string'].replace('_', ' ')
-                elif sargs['float'] and sargs['float'] != '.':
-                    kwargs[sargs['key']] = float(sargs['float'])
+        kwargs = {}
+        if len(args) == 2:
+            sargs = re.finditer('(?:(?<=\s)|(?<=^))'
+                                '(?P<key>\w+)=(?:\"'
+                                '(?P<string>.*)\"|'
+                                '(?P<float>\d*\.\d*)|'
+                                '(?P<int>\d+))'
+                                '(?=\s|$)',
+                                args[1])
+
+            for sarg in sargs:
+                sarg = sarg.groupdict()
+                if sarg['string']:
+                    kwargs[sarg['key']] = sarg['string'].replace('_', ' ')
+                elif sarg['float'] and sarg['float'] != '.':
+                    kwargs[sarg['key']] = float(sarg['float'])
                 else:
-                    kwargs[sargs['key']] = int(sargs['int'])
-            instance = classes[args[0]](**kwargs)
-            try:
-                instance.save()
-            except Exception as e:
-                print("** could not save [{}] object **".format(args[0]))
-                print(e)
-                return False
-            else:
-                print(instance.id)
+                    kwargs[sarg['key']] = int(sarg['int'])
+
+        instance = classes[args[0]](**kwargs)
+        try:
+            instance.save()
+        except Exception as e:
+            print("** could not save [{}] object **".format(args[0]))
+            print(e)
+            return False
+        else:
+            print(instance.id)
 
     def do_show(self, arg):
         """Prints an instance as a string based on the class and id"""

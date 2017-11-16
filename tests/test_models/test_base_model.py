@@ -3,6 +3,7 @@
 from datetime import datetime
 import inspect
 import models
+import os
 import pep8 as pycodestyle
 import time
 import unittest
@@ -58,6 +59,8 @@ class TestBaseModelDocs(unittest.TestCase):
 
 class TestBaseModel(unittest.TestCase):
     """Test the BaseModel class"""
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing database")
     @mock.patch('models.storage')
     def test_instantiation(self, mock_storage):
         """Test that object is correctly created"""
