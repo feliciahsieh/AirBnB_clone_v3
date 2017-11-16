@@ -52,31 +52,30 @@ class HBNBCommand(cmd.Cmd):
 
         Any parameter that does not fit this pattern will be ignored.
         """
-        args = arg.split(maxsplit=1)
+        args = shlex.split(arg)
         if len(args) == 0:
             print("** class name missing **")
             return False
         if args[0] not in classes:
             print("** class doesn't exist **")
             return False
-        kwargs = {}
-        if len(args) == 2:
-            sargs = re.finditer('(?:(?<=\s)|(?<=^))'
-                                '(?P<key>\w+)=(?:\"'
-                                '(?P<string>.*)\"|'
-                                '(?P<float>\d*\.\d*)|'
-                                '(?P<int>\d+))'
-                                '(?=\s|$)',
-                                args[1])
-
-            for sarg in sargs:
-                sarg = sarg.groupdict()
-                if sarg['string']:
-                    kwargs[sarg['key']] = sarg['string'].replace('_', ' ')
-                elif sarg['float'] and sarg['float'] != '.':
-                    kwargs[sarg['key']] = float(sarg['float'])
+        else:
+            kwargs = {}
+            for arg in args[1:]:
+                match = re.fullmatch('(?P<key>[a-zA-Z_]\w*)=(?:'
+                                     '(?P<int>\d+)|'
+                                     '(?P<float>\d*\.\d*)|'
+                                     '(?P<string>.*))',
+                                     arg)
+                match = match.groupdict()
+                if match['string']:
+                    kwargs[match['key']] = match['string'].replace('_', ' ')
+                elif match['float']:
+                    if match['float'] == '.':
+                        continue
+                    kwargs[match['key']] = float(match['float'])
                 else:
-                    kwargs[sarg['key']] = int(sarg['int'])
+                    kwargs[match['key']] = int(match['int'])
 
         instance = classes[args[0]](**kwargs)
         try:
@@ -131,18 +130,14 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             for value in models.storage.all().values():
                 obj_list.append(str(value))
-            print("[", end="")
-            print(", ".join(obj_list), end="")
-            print("]")
         elif args[0] in classes:
             for key in models.storage.all():
-                if args[0] in key:
+                if key.startswith(args[0]):
                     obj_list.append(str(models.storage.all()[key]))
-            print("[", end="")
-            print(", ".join(obj_list), end="")
-            print("]")
         else:
             print("** class doesn't exist **")
+            return False
+        print(obj_list)
 
     def do_update(self, arg):
         """Update an instance based on the class name, id, attribute & value"""
