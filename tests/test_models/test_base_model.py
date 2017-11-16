@@ -59,10 +59,7 @@ class TestBaseModelDocs(unittest.TestCase):
 
 class TestBaseModel(unittest.TestCase):
     """Test the BaseModel class"""
-    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
-                     "Testing database")
-    @mock.patch('models.storage')
-    def test_instantiation(self, mock_storage):
+    def test_instantiation(self):
         """Test that object is correctly created"""
         inst = BaseModel()
         self.assertIs(type(inst), BaseModel)
@@ -79,7 +76,6 @@ class TestBaseModel(unittest.TestCase):
             with self.subTest(attr=attr, typ=typ):
                 self.assertIn(attr, inst.__dict__)
                 self.assertIs(type(inst.__dict__[attr]), typ)
-        self.assertTrue(mock_storage.new.called)
         self.assertEqual(inst.name, "Holberton")
         self.assertEqual(inst.number, 89)
 
@@ -131,6 +127,7 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(d['__class__'], 'BaseModel')
         self.assertEqual(d['name'], "Holberton")
         self.assertEqual(d['my_number'], 89)
+        self.assertNotIn('_sa_instance_state', d)
 
     def test_to_dict_values(self):
         """test that values in dict returned from to_dict are correct"""
@@ -161,4 +158,5 @@ class TestBaseModel(unittest.TestCase):
         new_updated_at = inst.updated_at
         self.assertNotEqual(old_updated_at, new_updated_at)
         self.assertEqual(old_created_at, new_created_at)
+        self.assertTrue(mock_storage.new.called)
         self.assertTrue(mock_storage.save.called)
