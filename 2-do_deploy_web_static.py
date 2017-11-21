@@ -27,11 +27,13 @@ def do_deploy(archive_path):
             putpath = api.put(archive_path)
             api.run('mkdir -p {}'.format(outpath))
             api.run('tar -xzf {} -C {}'.format(putpath[0], outpath))
-            api.run('rm {}'.format(putpath[0]))
-            api.run('mv {}/web_static/* {}'.format(outpath, outpath))
+            api.run('rm -f {}'.format(putpath[0]))
+            api.run('mv -u {}/web_static/* {}'.format(outpath, outpath))
             api.run('rm -rf {}/web_static'.format(outpath))
             api.run('rm -rf /data/web_static/current')
-            api.run('ln -s {} /data/web_static/current'.format(outpath))
+            api.run('ln -sf {} /data/web_static/current'.format(outpath))
             print('New version deployed!')
         except:
             return False
+        else:
+            return True
