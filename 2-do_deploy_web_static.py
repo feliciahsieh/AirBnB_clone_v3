@@ -2,6 +2,7 @@
 """Deploy an archive of static html to my web servers with Fabric3"""
 
 from fabric import api
+from fabric.contrib import files
 import os
 
 
@@ -22,9 +23,12 @@ def do_deploy(archive_path):
         return False
     with api.cd('/tmp'):
         basename = os.path.basename(archive_path)
-        outpath = '/data/web_static/releases/{}'.format(basename)
+        root, ext = os.path.splitext(basename)
+        outpath = '/data/web_static/releases/{}'.format(root)
         try:
             putpath = api.put(archive_path)
+            if files.exists(outpath):
+                api.run('rm -rdf {}'.format(outpath))
             api.run('mkdir -p {}'.format(outpath))
             api.run('tar -xzf {} -C {}'.format(putpath[0], outpath))
             api.run('rm -f {}'.format(putpath[0]))
