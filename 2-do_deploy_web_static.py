@@ -9,6 +9,7 @@ api.env.hosts = ['142.44.167.235', '144.217.246.199']
 api.env.user = 'ubuntu'
 api.env.key_filename = '~/.ssh/holberton'
 
+
 def do_deploy(archive_path):
     """Function to transfer `archive_path` to web servers.
 
