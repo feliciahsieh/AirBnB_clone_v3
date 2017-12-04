@@ -94,7 +94,9 @@ class DBStorage:
         """Count number of objects in storage"""
         total = 0
         if type(cls) == str and cls in name2class:
-            total = len(self.all(cls))
+            cls = name2class[cls]
+            total = len(self.__session.query(cls).all())
         elif cls is None:
-            total = len(self.all())
+            for cls in name2class.values():
+                total += len(self.__session.query(cls).all())
         return total

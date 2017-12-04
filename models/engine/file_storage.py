@@ -83,5 +83,5 @@ class FileStorage:
         if type(cls) == str and cls in classes:
             total = len(self.all(cls))
         elif cls is None:
-            total = len(self.all())
+            total = len(self.__objects)
         return total
