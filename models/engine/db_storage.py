@@ -28,6 +28,7 @@ class DBStorage:
     __session = None
 
     def __init__(self):
+        """Initializes the object"""
         user = os.getenv('HBNB_MYSQL_USER')
         passwd = os.getenv('HBNB_MYSQL_PWD')
         host = os.getenv('HBNB_MYSQL_HOST')
@@ -38,6 +39,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        """returns a dictionary of all the objects present"""
         if not self.__session:
             self.reload()
         objects = {}
@@ -53,18 +55,22 @@ class DBStorage:
         return objects
 
     def reload(self):
+        """reloads objects from the database"""
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
         Base.metadata.create_all(self.__engine)
         self.__session = scoped_session(session_factory)
 
     def new(self, obj):
+        """creates a new object"""
         self.__session.add(obj)
 
     def save(self):
+        """saves the current session"""
         self.__session.commit()
 
     def delete(self, obj=None):
+        """deletes an object"""
         if not self.__session:
             self.reload()
         if obj:
@@ -76,21 +82,18 @@ class DBStorage:
 
     def get(self, cls, id):
         """Retrieve an object"""
-        if cls is not None and type(cls) == str and cls in name2class.values():
-            result = self.__session.query(cls).filter(cls.id == id).first
+        if cls is not None and type(cls) is str and id is not None and\
+           type(id) is str and cls in name2class:
+            cls = name2class[cls]
+            result = self.__session.query(cls).filter(cls.id == id)[0]
             return (result)
         else:
             return(None)
 
     def count(self, cls=None):
         """Count number of objects in storage"""
-        if type(cls) == str and cls in name2class.values():
-            total = sum(p.__class__.__name__ == cls for p in self.__session.query(cls))
-            return total
+        if type(cls) == str and cls in name2class:
+            total = len(self.all(cls))
         else:
-            num = 0
-            if cls is None:
-                num = len(self.all())
-            else:
-                num = len(self.all(cls))
-            return num
+            total = len(self.all())
+        return total

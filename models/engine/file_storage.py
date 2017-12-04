@@ -19,9 +19,7 @@ classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
 class FileStorage:
     """serializes instances to a JSON file & deserializes back to instances"""
 
-    # string - path to the JSON file
     __file_path = "file.json"
-    # dictionary - empty but will store all objects by <class name>.id
     __objects = {}
 
     def all(self, cls=None):
@@ -41,7 +39,7 @@ class FileStorage:
             key = obj.__class__.__name__ + "." + obj.id
             self.__objects[key] = obj
 
-    def save(self):c
+    def save(self):
         """serializes __objects to the JSON file (path: __file_path)"""
         json_objects = {}
         for key in self.__objects:
@@ -71,21 +69,18 @@ class FileStorage:
 
     def get(self, cls, id):
         """Retrieve an object"""
-        if cls is not None and type(cls) == str and cls in classes.values():
-            result = self.__objects(cls).filter(cls.id == id).first
-            return (result)
+        if cls is not None and type(cls) is str and id is not None and\
+           type(id) is str and cls in classes:
+            key = cls + '.' + id
+            obj = self.__objects.get(key, None)
+            return (obj)
         else:
             return(None)
 
     def count(self, cls=None):
         """Count number of objects in storage"""
-        if type(cls) == str and cls in classes.values():
-            total = sum(p.__class__.__name__ == cls for p in self.__objects(cls))
-            return total
+        if type(cls) == str and cls in classes:
+            total = len(self.all(cls))
         else:
-            num = 0
-            if cls is None:
-                num = len(self.all())
-            else:
-                num = len(self.all(cls))
-            return num
+            total = len(self.all())
+        return total

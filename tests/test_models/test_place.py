@@ -91,7 +91,7 @@ class TestPlace(unittest.TestCase):
         """Test Place has attr user_id, and it's an empty string"""
         place = Place()
         self.assertTrue(hasattr(place, "user_id"))
-        self.assertIsInstance(place.user_id, "")
+        self.assertIsInstance(place.user_id, str)
 
     @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
                      "Testing FileStorage")
