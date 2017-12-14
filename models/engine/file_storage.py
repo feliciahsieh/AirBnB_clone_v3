@@ -28,6 +28,9 @@ class FileStorage:
         """returns the dictionary __objects"""
         if not cls:
             return self.__objects
+        elif type(cls) == str:
+            return {k: v for k, v in self.__objects.items()
+                    if v.__class__.__name__ == cls}
         else:
             return {k: v for k, v in self.__objects.items()
                     if v.__class__ == cls}
@@ -61,3 +64,7 @@ class FileStorage:
         if obj is not None:
             del self.__objects[obj.__class__.__name__ + '.' + obj.id]
             self.save()
+
+    def close(self):
+        """Deserialize JSON file to objects"""
+        self.reload()

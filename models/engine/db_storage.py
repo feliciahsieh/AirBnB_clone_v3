@@ -13,6 +13,14 @@ from models.review import Review
 from models.user import User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+name2class = {
+    'Amenity': Amenity,
+    'City': City,
+    'Place': Place,
+    'State': State,
+    'Review': Review,
+    'User': User
+}
 
 
 class DBStorage:
@@ -33,30 +41,22 @@ class DBStorage:
         if not self.__session:
             self.reload()
         objects = {}
+        if type(cls) == str:
+            cls = name2class.get(cls, None)
         if cls:
             for obj in self.__session.query(cls):
                 objects[obj.__class__.__name__ + '.' + obj.id] = obj
         else:
-            for obj in self.__session.query(Amenity):
-                objects[obj.__class__.__name__ + '.' + obj.id] = obj
-            for obj in self.__session.query(City):
-                objects[obj.__class__.__name__ + '.' + obj.id] = obj
-            for obj in self.__session.query(Place):
-                objects[obj.__class__.__name__ + '.' + obj.id] = obj
-            for obj in self.__session.query(State):
-                objects[obj.__class__.__name__ + '.' + obj.id] = obj
-            for obj in self.__session.query(Review):
-                objects[obj.__class__.__name__ + '.' + obj.id] = obj
-            for obj in self.__session.query(User):
-                objects[obj.__class__.__name__ + '.' + obj.id] = obj
-
+            for cls in name2class.values():
+                for obj in self.__session.query(cls):
+                    objects[obj.__class__.__name__ + '.' + obj.id] = obj
         return objects
 
     def reload(self):
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
-        self.__session = scoped_session(session_factory)
         Base.metadata.create_all(self.__engine)
+        self.__session = scoped_session(session_factory)
 
     def new(self, obj):
         self.__session.add(obj)
@@ -69,3 +69,7 @@ class DBStorage:
             self.reload()
         if obj:
             self.__session.delete(obj)
+
+    def close(self):
+        """Dispose of current session if active"""
+        self.__session.remove()

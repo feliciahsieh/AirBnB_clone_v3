@@ -47,8 +47,8 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer,
                                 default=0,
                                 nullable=False)
-        latitude = Column(Float)
-        longitude = Column(Float)
+        latitude = Column(Float, default=0.0)
+        longitude = Column(Float, default=0.0)
         reviews = relationship("Review",
                                backref="places")
         amenities = relationship("Amenity",

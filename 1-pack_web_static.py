@@ -8,7 +8,10 @@ import os
 
 def do_pack():
     """Function to create tarball of webstatic files from the web_static
-    folder in Airbnb_v2"""
+    folder in Airbnb_v2.
+
+    Returns: path of .tgz file on success, None otherwise
+    """
     with api.settings(warn_only=True):
         isdir = os.path.isdir('versions')
         if not isdir:

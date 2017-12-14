@@ -69,34 +69,85 @@ class TestPlace(unittest.TestCase):
         self.assertTrue(hasattr(place, "created_at"))
         self.assertTrue(hasattr(place, "updated_at"))
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_city_id_attr(self):
         """Test Place has attr city_id, and it's an empty string"""
         place = Place()
         self.assertTrue(hasattr(place, "city_id"))
         self.assertEqual(place.city_id, "")
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
+                     "Testing FileStorage")
+    def test_city_id_attr_db(self):
+        """Test Place has attr city_id, and it's an empty string"""
+        place = Place()
+        self.assertTrue(hasattr(Place, "city_id"))
+        self.assertIsInstance(Place.city_id, InstrumentedAttribute)
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_user_id_attr(self):
         """Test Place has attr user_id, and it's an empty string"""
         place = Place()
         self.assertTrue(hasattr(place, "user_id"))
-        self.assertEqual(place.user_id, "")
+        self.assertIsInstance(place.user_id, "")
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
+                     "Testing FileStorage")
+    def test_user_id_attr_db(self):
+        """Test Place has attr user_id, and it's an empty string"""
+        place = Place()
+        self.assertTrue(hasattr(Place, "user_id"))
+        self.assertIsInstance(Place.user_id, InstrumentedAttribute)
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_name_attr(self):
         """Test Place has attr name, and it's an empty string"""
         place = Place()
         self.assertTrue(hasattr(place, "name"))
         self.assertEqual(place.name, "")
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
+                     "Testing FileStorage")
+    def test_name_attr_db(self):
+        """Test Place has attr name, and it's an empty string"""
+        place = Place()
+        self.assertTrue(hasattr(Place, "name"))
+        self.assertIsInstance(Place.name, InstrumentedAttribute)
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_description_attr(self):
         """Test Place has attr description, and it's an empty string"""
         place = Place()
         self.assertTrue(hasattr(place, "description"))
         self.assertEqual(place.description, "")
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
+                     "Testing FileStorage")
+    def test_description_attr_db(self):
+        """Test Place has attr description, and it's an empty string"""
+        place = Place()
+        self.assertTrue(hasattr(Place, "description"))
+        self.assertIsInstance(Place.description, InstrumentedAttribute)
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_number_rooms_attr(self):
         """Test Place has attr number_rooms, and it's an int == 0"""
         place = Place()
         self.assertTrue(hasattr(place, "number_rooms"))
+        self.assertEqual(type(place.number_rooms), int)
+        self.assertEqual(place.number_rooms, 0)
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
+                     "Testing FileStorage")
+    def test_number_rooms_attr_db(self):
+        """Test Place has attr number_rooms, and it's an int == 0"""
+        place = Place()
+        self.assertTrue(hasattr(Place, "number_rooms"))
         self.assertEqual(type(place.number_rooms), int)
         self.assertEqual(place.number_rooms, 0)
 
