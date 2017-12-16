@@ -41,7 +41,7 @@ class FileStorage:
             key = obj.__class__.__name__ + "." + obj.id
             self.__objects[key] = obj
 
-    def save(self):
+    def save(self):c
         """serializes __objects to the JSON file (path: __file_path)"""
         json_objects = {}
         for key in self.__objects:
@@ -68,3 +68,24 @@ class FileStorage:
     def close(self):
         """Deserialize JSON file to objects"""
         self.reload()
+
+    def get(self, cls, id):
+        """Retrieve an object"""
+        if cls is not None and type(cls) == str and cls in classes.values():
+            result = self.__objects(cls).filter(cls.id == id).first
+            return (result)
+        else:
+            return(None)
+
+    def count(self, cls=None):
+        """Count number of objects in storage"""
+        if type(cls) == str and cls in classes.values():
+            total = sum(p.__class__.__name__ == cls for p in self.__objects(cls))
+            return total
+        else:
+            num = 0
+            if cls is None:
+                num = len(self.all())
+            else:
+                num = len(self.all(cls))
+            return num
