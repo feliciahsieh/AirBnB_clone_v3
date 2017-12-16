@@ -7,3 +7,8 @@ import app_views from api.v1.views
 def hbnbStatus():
     """hbnbStatus"""
     return ('{\n\t"status": "OK"\n}')
+
+@app_views.route('/api/v1/stats')
+def hbnbStats():
+    """hbnbStats"""
+    storage.count()
