@@ -16,8 +16,7 @@ def display_hbnb():
     return render_template('100-hbnb.html',
                            states=states,
                            amenities=amenities,
-                           places=places,
-                           users=users)
+                           places=places)
 
 
 @app.teardown_appcontext
