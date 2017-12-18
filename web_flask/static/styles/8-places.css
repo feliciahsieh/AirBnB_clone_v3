@@ -16,6 +16,7 @@
 }
 .places > article {
     width: 390px;
+    max-height: fit-content;
     padding: 20px 20px 20px 20px;
     margin: 20px 20px 20px 20px;
     border: 1px solid #FF5A5F;
