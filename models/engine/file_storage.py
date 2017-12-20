@@ -73,9 +73,9 @@ class FileStorage:
            type(id) is str and cls in classes:
             key = cls + '.' + id
             obj = self.__objects.get(key, None)
-            return (obj)
+            return obj
         else:
-            return(None)
+            return None
 
     def count(self, cls=None):
         """Count number of objects in storage"""
