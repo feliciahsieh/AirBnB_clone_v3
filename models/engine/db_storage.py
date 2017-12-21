@@ -24,12 +24,12 @@ name2class = {
 
 
 class DBStorage:
-    """DBStorage class"""
+    """Database Storage"""
     __engine = None
     __session = None
 
     def __init__(self):
-        """__init__"""
+        """Initializes the object"""
         user = os.getenv('HBNB_MYSQL_USER')
         passwd = os.getenv('HBNB_MYSQL_PWD')
         host = os.getenv('HBNB_MYSQL_HOST')
@@ -40,7 +40,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """all"""
+        """returns a dictionary of all the objects present"""
         if not self.__session:
             self.reload()
         objects = {}
@@ -56,22 +56,22 @@ class DBStorage:
         return objects
 
     def reload(self):
-        """reload"""
+        """reloads objects from the database"""
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
         Base.metadata.create_all(self.__engine)
         self.__session = scoped_session(session_factory)
 
     def new(self, obj):
-        """new"""
+        """creates a new object"""
         self.__session.add(obj)
 
     def save(self):
-        """save"""
+        """saves the current session"""
         self.__session.commit()
 
     def delete(self, obj=None):
-        """delete"""
+        """deletes an object"""
         if not self.__session:
             self.reload()
         if obj:
@@ -80,3 +80,24 @@ class DBStorage:
     def close(self):
         """Dispose of current session if active"""
         self.__session.remove()
+
+    def get(self, cls, id):
+        """Retrieve an object"""
+        if cls is not None and type(cls) is str and id is not None and\
+           type(id) is str and cls in name2class:
+            cls = name2class[cls]
+            result = self.__session.query(cls).filter(cls.id == id).first()
+            return (result)
+        else:
+            return(None)
+
+    def count(self, cls=None):
+        """Count number of objects in storage"""
+        total = 0
+        if type(cls) == str and cls in name2class:
+            cls = name2class[cls]
+            total = self.__session.query(cls).count()
+        elif cls is None:
+            for cls in name2class.values():
+                total += self.__session.query(cls).count()
+        return total

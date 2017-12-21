@@ -7,6 +7,7 @@ from datetime import datetime
 import inspect
 from models import review
 from models.base_model import BaseModel
+import os
 import pep8
 import unittest
 Review = review.Review
@@ -66,18 +67,24 @@ class TestReview(unittest.TestCase):
         self.assertTrue(hasattr(review, "created_at"))
         self.assertTrue(hasattr(review, "updated_at"))
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_place_id_attr(self):
         """Test Review has attr place_id, and it's an empty string"""
         review = Review()
         self.assertTrue(hasattr(review, "place_id"))
         self.assertEqual(review.place_id, "")
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_user_id_attr(self):
         """Test Review has attr user_id, and it's an empty string"""
         review = Review()
         self.assertTrue(hasattr(review, "user_id"))
         self.assertEqual(review.user_id, "")
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing DBStorage")
     def test_text_attr(self):
         """Test Review has attr text, and it's an empty string"""
         review = Review()
@@ -90,8 +97,10 @@ class TestReview(unittest.TestCase):
         new_d = r.to_dict()
         self.assertEqual(type(new_d), dict)
         for attr in r.__dict__:
-            self.assertTrue(attr in new_d)
-            self.assertTrue("__class__" in new_d)
+            if attr is not "_sa_instance_state":
+                with self.subTest(attr=attr):
+                    self.assertTrue(attr in new_d)
+        self.assertTrue("__class__" in new_d)
 
     def test_to_dict_values(self):
         """test that values in dict returned from to_dict are correct"""
