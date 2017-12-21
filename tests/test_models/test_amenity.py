@@ -90,12 +90,10 @@ class TestAmenity(unittest.TestCase):
         new_d = am.to_dict()
         self.assertEqual(type(new_d), dict)
         for attr in am.__dict__:
-            with self.subTest(attr=attr):
-                if attr == '_sa_instance_state':
-                    continue
-                self.assertTrue(attr in new_d)
-        if os.getenv('HBNB_TYPE_STORAGE') != 'db':
-            self.assertTrue("__class__" in new_d)
+            if attr is not "_sa_instance_state":
+                with self.subTest(attr=attr):
+                    self.assertTrue(attr in new_d)
+        self.assertTrue("__class__" in new_d)
 
     def test_to_dict_values(self):
         """test that values in dict returned from to_dict are correct"""
