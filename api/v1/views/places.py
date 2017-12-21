@@ -34,7 +34,7 @@ def get_place(place_id):
 
 @app_views.route('/places/<string:place_id>', methods=['DELETE'],
                  strict_slashes=False)
-def delete_place(city_id):
+def delete_place(place_id):
     """deletes a place based on its place_id"""
     place = storage.get("Place", place_id)
     if place is None:
