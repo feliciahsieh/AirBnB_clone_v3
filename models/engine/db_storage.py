@@ -24,6 +24,7 @@ name2class = {
 
 
 class DBStorage:
+    """Database Storage"""
     __engine = None
     __session = None
 
