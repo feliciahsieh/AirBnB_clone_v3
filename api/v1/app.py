@@ -7,7 +7,7 @@ from flask import Flask, Blueprint, jsonify
 
 
 app = Flask(__name__)
-app.register_blueprint(app_views, url_prefix="/api/v1")
+app.register_blueprint(app_views)
 
 #declare a method to handle @app.teardown_appcontext that calls storage.close()
 @app.teardown_appcontext
@@ -20,4 +20,5 @@ def page_not_found(error):
     return 'This page does not exist', 404
 
 if __name__ == "__main__":
-    app.run(host=os.getenv('HBNB_API_HOST'), port=int(os.getenv('HBNB_API_PORT')))
+    app.run(host=os.getenv('HBNB_API_HOST', '0.0.0.0'),
+            port=int(os.getenv('HBNB_API_PORT', '5000')))
