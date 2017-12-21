@@ -9,11 +9,12 @@ from flask import Flask, Blueprint, jsonify
 app = Flask(__name__)
 app.register_blueprint(app_views)
 
-#declare a method to handle @app.teardown_appcontext that calls storage.close()
+
 @app.teardown_appcontext
 def teardown_appcontext(code):
     """teardown_appcontext"""
     storage.close()
+
 
 @app.errorhandler(404)
 def page_not_found(error):

@@ -13,10 +13,12 @@ hbnbText = {
     "users": "User"
 }
 
+
 @app_views.route('/status', strict_slashes=False)
 def hbnbStatus():
     """hbnbStatus"""
     return jsonify({"status": "OK"})
+
 
 @app_views.route('/api/v1/stats', strict_slashes=False)
 def hbnbStats():
