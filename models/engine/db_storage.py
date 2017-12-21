@@ -86,7 +86,7 @@ class DBStorage:
         if cls is not None and type(cls) is str and id is not None and\
            type(id) is str and cls in name2class:
             cls = name2class[cls]
-            result = self.__session.query(cls).filter(cls.id == id)[0]
+            result = self.__session.query(cls).filter(cls.id == id).first()
             return (result)
         else:
             return(None)
@@ -96,8 +96,8 @@ class DBStorage:
         total = 0
         if type(cls) == str and cls in name2class:
             cls = name2class[cls]
-            total = len(self.__session.query(cls).all())
+            total = self.__session.query(cls).count()
         elif cls is None:
             for cls in name2class.values():
-                total += len(self.__session.query(cls).all())
+                total += self.__session.query(cls).count()
         return total
