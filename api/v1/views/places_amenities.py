@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """places.py"""
-
+from os import getenv
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from models import storage
