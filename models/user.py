@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """ holds class User"""
-from base64 import b64encode
 import hashlib
 import models
 from models.base_model import BaseModel, Base
@@ -36,9 +35,6 @@ class User(BaseModel, Base):
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
-        if 'password' in kwargs:
-            pwd = hashlib.md5(b64encode(kwargs['password'].encode('ascii')))
-            kwargs['password'] = pwd.hexdigest()
         super().__init__(*args, **kwargs)
 
     @property
@@ -48,5 +44,4 @@ class User(BaseModel, Base):
     @password.setter
     def password(self, pwd):
         """hashing password values"""
-        self._password = hashlib.md5(b64encode(pwd
-                                               .encode('ascii'))).hexdigest()
+        self._password = hashlib.md5(pwd.encode()).hexdigest()
