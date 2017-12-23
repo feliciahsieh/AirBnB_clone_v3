@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """ holds class User"""
+from base64 import b64encode
+import hashlib
 import models
 from models.base_model import BaseModel, Base
 from os import getenv
@@ -13,8 +15,9 @@ class User(BaseModel, Base):
         __tablename__ = 'users'
         email = Column(String(128),
                        nullable=False)
-        password = Column(String(128),
-                          nullable=False)
+        _password = Column('password',
+                           String(128),
+                           nullable=False)
         first_name = Column(String(128),
                             nullable=True)
         last_name = Column(String(128),
@@ -27,10 +30,23 @@ class User(BaseModel, Base):
                                cascade="all, delete-orphan")
     else:
         email = ""
-        password = ""
+        _password = ""
         first_name = ""
         last_name = ""
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
+        if 'password' in kwargs:
+            pwd = hashlib.md5(b64encode(kwargs['password'].encode('ascii')))
+            kwargs['password'] = pwd.hexdigest()
         super().__init__(*args, **kwargs)
+
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, pwd):
+        """hashing password values"""
+        self._password = hashlib.md5(b64encode(pwd
+                                               .encode('ascii'))).hexdigest()
